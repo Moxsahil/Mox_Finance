@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1738497217961,
+      "tag": "0000_flowery_morbius",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1738509776511,
+      "tag": "0001_far_sharon_carter",
+      "breakpoints": true
+    }
+  ]
+}
