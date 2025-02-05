@@ -1,7 +1,10 @@
 import { Hono } from "hono"
 import { handle } from "hono/vercel";;
-import accounts from './accounts';
 import { HTTPException } from 'hono/http-exception';
+
+import accounts from './accounts';
+import categories from './categories';
+
 
 export const runtime = "edge"
 
@@ -18,7 +21,9 @@ app.get("/hello", (c) => {
     return c.json({ hello : "world" });
 })
 
-const routes = app.route('/accounts', accounts);
+const routes = app
+.route("/accounts", accounts)
+.route("/categories", categories);
 
 export const GET = handle(app);
 export const POST = handle(app);
