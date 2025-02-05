@@ -18,7 +18,6 @@ import {
 
 const formSchema = insertAccountSchema.pick({
     name: true,
-
 });
 
 type FormValues = z.input<typeof formSchema>;
@@ -44,6 +43,7 @@ export const AccountForm = ({
     });
 
     const handleSubmit = (values: FormValues) => {
+        console.log({ values })
         onSubmit(values);
     }
 
@@ -78,7 +78,7 @@ export const AccountForm = ({
                 <Button className="w-full" disabled = {disabled}>
                     {id? "Save Changes" : "Create account"}
                 </Button>
-                { !!id && <Button
+                {!!id && <Button
                     type="button"
                     disabled={disabled}
                     onClick = {handleDelete}
