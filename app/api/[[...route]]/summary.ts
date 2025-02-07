@@ -7,7 +7,7 @@ import { z } from "zod";
 import { db } from "@/db/drizzle";
 import { and, desc, eq, gte, lt, lte, sql, sum } from "drizzle-orm";
 import { accounts, categories, transactions } from "@/db/schema";
-import { calculatePercentageChange } from "@/lib/utils";
+import { calculatePercentageChange, fillMissingDays } from "@/lib/utils";
 
 const app = new Hono()
 .get(
@@ -46,8 +46,15 @@ const app = new Hono()
                 income: sql`SUM(CASE WHEN ${transactions.amount} >= 0 THEN ${transactions.amount} ELSE 0 END)`.mapWith(Number),
                 expenses: sql`SUM(CASE WHEN ${transactions.amount} <= 0 THEN ${transactions.amount} ELSE 0 END)`.mapWith(Number),
                 remainingBalance: sum(transactions.amount).mapWith(Number),
-            }).from(transactions).innerJoin(accounts, eq(transactions.accountId, accounts.id))
-            .where(and(accountId ? eq(transactions.accountId, accountId) : undefined, eq(accounts.userId, userId), gte(transactions.date, startDate), lte(transactions.date, endDate)))
+            }).
+            from(transactions)
+            .innerJoin(accounts, eq(transactions.accountId, accounts.id))
+            .where(
+                and(
+                    accountId ? eq(transactions.accountId, accountId) : undefined, 
+                    eq(accounts.userId, userId), 
+                    gte(transactions.date, startDate), 
+                    lte(transactions.date, endDate)))
         }
 
         const [currentPeriod] = await fetchFinancialData(
@@ -57,8 +64,8 @@ const app = new Hono()
         );
         const [lastPeriod] = await fetchFinancialData(
             auth.userId,
-            startDate,
-            endDate,
+            lastPeriodStart,
+            lastPeriodEnd,
         );
 
         const incomeChange = calculatePercentageChange(currentPeriod.income, lastPeriod.income);
@@ -71,15 +78,29 @@ const app = new Hono()
             value: sql`SUM(ABS(${transactions.amount}))`.mapWith(Number),
         })
         .from(transactions)
-        .innerJoin(accounts, eq(transactions.accountId, accounts.id))
-        .innerJoin(categories, eq(transactions.categoryId, categories.id))
-        .where(and
-            (accountId ? 
-        eq(transactions.accountId, accountId) : undefined, 
-        eq(categories.userId, auth.userId),
+        .innerJoin(
+            accounts, 
+            eq(
+                transactions.accountId, 
+                accounts.id
+            ),
+        )
+        .innerJoin(
+            categories, 
+            eq(
+                transactions.categoryId, 
+                categories.id
+            ),
+        )
+        .where(
+            and(
+            accountId ? eq(transactions.accountId, accountId) : undefined, 
+        eq(accounts.userId, auth.userId),
         lt(transactions.amount, 0),
         gte(transactions.date, startDate), 
-        lte(transactions.date, endDate)))
+        lte(transactions.date, endDate)
+    ),
+    )
         .groupBy(categories.name)
         .orderBy(desc(sql`SUM(ABS(${transactions.amount}))`));
 
@@ -104,25 +125,34 @@ const app = new Hono()
         })
         .from(transactions)
         .innerJoin(accounts, eq(transactions.accountId, accounts.id))
-        .where(and
-            (accountId ? 
-        eq(transactions.accountId, accountId) : undefined, 
-        eq(categories.userId, auth.userId),
-        gte(transactions.date, startDate), 
-        lte(transactions.date, endDate)))
-        .groupBy(transactions.date)
-        .orderBy(transactions.date);
+        .where(
+            and(
+            accountId ? eq(transactions.accountId, accountId) :
+            undefined, 
+            eq(accounts.userId, auth.userId),
+            gte(transactions.date, startDate), 
+            lte(transactions.date, endDate)))
+            .groupBy(transactions.date)
+            .orderBy(transactions.date);
         
+            const days = fillMissingDays(
+                activeDays,
+                startDate,
+                endDate
+            )
 
 
         return c.json({
-            currentPeriod,
-            lastPeriod,
+            data: {
+            incomeAmount: currentPeriod.income,
             incomeChange,
+            expensesAmount: currentPeriod.expenses,
             expensesChange,
+            remainingBalanceAmount: currentPeriod.remainingBalance,
             remainingBalanceChange,
-            finalCategories,
-            activeDays,
+            categories: finalCategories,
+            days
+            }
         })
 
     },
