@@ -62,8 +62,13 @@ export const TransactionForm = ({
 }: Props) => {
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: defaultValues || { date: new Date() }, 
+        defaultValues: {
+            ...defaultValues, 
+            payee: defaultValues?.payee ?? "",  // Ensuring  payee is always a string otherwise it will be intially shown as undefined
+            date: defaultValues?.date ?? new Date(),
+        },
     });
+    
 
     const handleSubmit = (values: FormValues) => {
         const amount = parseFloat(values.amount);
@@ -149,7 +154,7 @@ export const TransactionForm = ({
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>
-                            Payee
+                            Payee Name
                         </FormLabel>
                         <FormControl>
                             <Input 
