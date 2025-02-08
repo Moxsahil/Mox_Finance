@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { FaPiggyBank } from "react-icons/fa";
+import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
 
 import { useGetSummary } from "@/features/summary/api/use-get-summary";
@@ -31,10 +31,10 @@ export const DataGrid = () => {
 
     return <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-2 mb-8">
         <DataCard
-        title="Remaining"
+        title="Available Balance"
         value={data?.remainingBalanceAmount}
         percentageChange={data?.remainingBalanceChange}
-        icon={FaPiggyBank}
+        icon={MdOutlineAccountBalanceWallet }
         variant="default"
         dateRange={dateRangeLabel}
         />

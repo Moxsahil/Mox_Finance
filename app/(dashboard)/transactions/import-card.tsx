@@ -11,7 +11,7 @@ import { ImportTable } from "./import-table";
 import { format, parse } from "date-fns";
 import { convertAmountToMiliunits } from "@/lib/utils";
 
-const dateFormat = "yyyy-MM-dd HH:mm:ss";
+const dateFormat = "yyyy-MM-dd HH:mm";
 const outputFormat = "yyyy-MM-dd";
 
 const requiredOptions = [

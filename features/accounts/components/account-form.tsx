@@ -43,7 +43,6 @@ export const AccountForm = ({
     });
 
     const handleSubmit = (values: FormValues) => {
-        console.log({ values })
         onSubmit(values);
     }
 
