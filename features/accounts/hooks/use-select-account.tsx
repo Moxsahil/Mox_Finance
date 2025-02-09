@@ -1,5 +1,7 @@
 import { useState, JSX, useRef } from "react";
 
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
 import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 
@@ -52,7 +54,8 @@ export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] 
     const ConfirmationDialog = () => {
         return (
             <Dialog open={promise !== null}>
-                <DialogContent>
+                <DialogContent aria-describedby={undefined}>
+                <VisuallyHidden>
                     <DialogHeader>
                         <DialogTitle>
                             Select an Account
@@ -81,6 +84,7 @@ export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] 
                             Confirm
                         </Button>
                     </DialogFooter>
+                    </VisuallyHidden>
                 </DialogContent>
             </Dialog>
         );

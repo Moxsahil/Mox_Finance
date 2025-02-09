@@ -7,8 +7,21 @@ import {
     CardHeader, 
     CardTitle 
 } from "@/components/ui/card";
+import { useTheme } from "next-themes";
+import { useUser, useClerk } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
 
 const SettingsPage = () => {
+  const { setTheme, resolvedTheme } = useTheme();
+  const { signOut } = useClerk();
+  const { user } = useUser();
+  
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
         <Card className="border-none drop-shadow-sm">
@@ -19,32 +32,34 @@ const SettingsPage = () => {
             </CardHeader>
             <CardContent>
                 <div className="space-y-6">
-                    {/* Bank Account Section */}
+                    {/* Theme Toggle Section */}
                     <div className="flex flex-col space-y-2 pb-4 border-b">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h3 className="text-lg font-medium">Bank account</h3>
-                                <p className="text-sm text-muted-foreground">
-                                    Bank account connected
-                                </p>
+                                <h3 className="text-lg font-medium">Mode</h3>
                             </div>
-                            <Button variant="destructive">
-                                Disconnect
-                            </Button>
+                            {mounted && (
+                                <Button 
+                                    variant="outline" 
+                                    onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                                >
+                                    {resolvedTheme === "dark" ? "Light Mode" : "Dark Mode"}
+                                </Button>
+                            )}
                         </div>
                     </div>
 
-                    {/* Subscription Section */}
+                    {/* Logout Section */}
                     <div className="flex flex-col space-y-2">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h3 className="text-lg font-medium">Subscription</h3>
-                                <p className="text-sm text-muted-foreground">
-                                    Subscription active
-                                </p>
+                                <h3 className="text-lg font-medium">Manage Account</h3>
                             </div>
-                            <Button variant="outline">
-                                Manage Subscription
+                            <Button 
+                                className="text-white bg-blue-500 hover:bg-blue-600" 
+                                onClick={() => signOut()}
+                            >
+                                Logout
                             </Button>
                         </div>
                     </div>
@@ -52,7 +67,7 @@ const SettingsPage = () => {
             </CardContent>
         </Card> 
     </div>
-  )
+  );
 }
 
 export default SettingsPage;

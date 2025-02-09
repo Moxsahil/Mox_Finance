@@ -1,4 +1,5 @@
 import { useState, JSX } from "react";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 import { Button } from "@/components/ui/button";
 
@@ -37,7 +38,8 @@ export const useConfirm = (
     const ConfirmationDialog = () => {
         return (
             <Dialog open={promise !== null}>
-                <DialogContent>
+                <DialogContent aria-describedby={undefined}>
+                    <VisuallyHidden>
                     <DialogHeader>
                         <DialogTitle>
                             {title}
@@ -59,6 +61,7 @@ export const useConfirm = (
                             Confirm
                         </Button>
                     </DialogFooter>
+                    </VisuallyHidden>
                 </DialogContent>
             </Dialog>
         );

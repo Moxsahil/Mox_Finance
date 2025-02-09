@@ -33,7 +33,13 @@ export const DatePicker = ({ value, onChange, disabled }: Props) => {
             </Button>
         </PopoverTrigger>
         <PopoverContent>
-            <Calendar mode="single" selected={value} onSelect={onChange} disabled={disabled} initialFocus />
+            <Calendar 
+                mode="single" 
+                selected={value} 
+                onSelect={onChange}
+                disabled={false} 
+                initialFocus 
+             />
         </PopoverContent>
     </Popover>
     );
