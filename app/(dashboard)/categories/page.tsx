@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, Plus } from "lucide-react";
+import { Suspense } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,67 +19,71 @@ import { useBulkDeleteCategories } from "@/features/categories/api/use-bulk-dele
 
 import { columns } from "./columns";
 
-  
-
-const CategoriesPage = () => {
-
+const CategoriesContent = () => {
     const newCategory = useNewCategory();
     const deleteCategories = useBulkDeleteCategories();
-    const categoriesQuery = useGetCategories()
+    const categoriesQuery = useGetCategories();
     const categories = categoriesQuery.data || [];
 
     const isDisabled = 
-    categoriesQuery.isLoading ||
-    deleteCategories.isPending;
+      categoriesQuery.isLoading ||
+      deleteCategories.isPending;
 
-    if(categoriesQuery.isLoading){
+    if (categoriesQuery.isLoading) {
       return (
         <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
           <Card className="border-none drop-shadow-sm">
-          <CardHeader>
-            <Skeleton className="h-8 w-48"/>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[500px] w-full flex items-center justify-center">
-              <Loader2 className="size-6 text-slate-300 animate-spin"/>
-            </div>
-          </CardContent>
+            <CardHeader>
+              <Skeleton className="h-8 w-48"/>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[500px] w-full flex items-center justify-center">
+                <Loader2 className="size-6 text-slate-300 animate-spin"/>
+              </div>
+            </CardContent>
           </Card>
         </div>
-      )
+      );
     }
 
-
-  return (
-    <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
+    return (
+      <div className="max-w-screen-2xl mx-auto w-full pb-10 -mt-24">
         <Card className="border-none drop-shadow-sm">
-        <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
-        <CardTitle className="text-xl line-clamp-1">
-            Categories Page
-        </CardTitle>
-        <Button
-        onClick={newCategory.onOpen} 
-        size="sm"
-        >
-            <Plus className="size-4 mr-2"/>
-            Add new
-        </Button>
-        </CardHeader>
-        <CardContent>
-          <DataTable 
-            filterKey="name"
-            columns={columns} 
-            data={categories}
-            onDelete={(row) => {
-              const ids = row.map((r) => r.original.id);
-              deleteCategories.mutate({ ids });
-            }}
-            disabled={isDisabled}
-          />
-        </CardContent>
+          <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
+            <CardTitle className="text-xl line-clamp-1">
+              Categories Page
+            </CardTitle>
+            <Button
+              onClick={newCategory.onOpen} 
+              size="sm"
+            >
+              <Plus className="size-4 mr-2"/>
+              Add new
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <DataTable 
+              filterKey="name"
+              columns={columns} 
+              data={categories}
+              onDelete={(row) => {
+                const ids = row.map((r) => r.original.id);
+                deleteCategories.mutate({ ids });
+              }}
+              disabled={isDisabled}
+            />
+          </CardContent>
         </Card> 
-    </div>
-  )
-}
+      </div>
+    );
+};
+
+const CategoriesPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CategoriesContent />
+    </Suspense>
+  );
+};
 
 export default CategoriesPage;
