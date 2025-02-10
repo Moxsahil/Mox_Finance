@@ -55,7 +55,6 @@ export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] 
         return (
             <Dialog open={promise !== null}>
                 <DialogContent aria-describedby={undefined}>
-                <VisuallyHidden>
                     <DialogHeader>
                         <DialogTitle>
                             Select an Account
@@ -84,7 +83,6 @@ export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] 
                             Confirm
                         </Button>
                     </DialogFooter>
-                    </VisuallyHidden>
                 </DialogContent>
             </Dialog>
         );

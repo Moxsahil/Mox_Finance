@@ -39,7 +39,6 @@ export const useConfirm = (
         return (
             <Dialog open={promise !== null}>
                 <DialogContent aria-describedby={undefined}>
-                    <VisuallyHidden>
                     <DialogHeader>
                         <DialogTitle>
                             {title}
@@ -61,7 +60,6 @@ export const useConfirm = (
                             Confirm
                         </Button>
                     </DialogFooter>
-                    </VisuallyHidden>
                 </DialogContent>
             </Dialog>
         );
