@@ -127,6 +127,12 @@ To run this project, you will need to add the following `environment variables` 
 
 Project UI **Images**.
 
+### 🎥 Watch the Demo
+
+<a href="https://www.youtube.com/watch?v=SJuwpWrYg1A" target="_blank">
+  <img src="https://img.youtube.com/vi/SJuwpWrYg1A/maxresdefault.jpg" alt="Watch the video" width="600" />
+</a>
+
 ![Image](https://github.com/user-attachments/assets/744d9f3a-4206-449a-b561-d5c3885930a9)
 
 ![Image](https://github.com/user-attachments/assets/3c372728-2399-49de-b022-23d8e367bcc4)
